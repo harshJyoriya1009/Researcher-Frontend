@@ -56,3 +56,4 @@ src/
 - Dark mode is the default theme; toggle it from Settings.
 - Login/Register accept any values that pass validation — the mock API always succeeds.
 # Researcher-Frontend
+# Researcher-Frontend

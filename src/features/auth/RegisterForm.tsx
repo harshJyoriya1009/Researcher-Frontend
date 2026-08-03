@@ -26,7 +26,8 @@ export function RegisterForm() {
   });
 
   const onSubmit = (values: RegisterFormValues) => {
-    registerMutation.mutate(values);
+    const { name, email, password } = values;
+    registerMutation.mutate({ name, email, password });
   };
 
   return (
