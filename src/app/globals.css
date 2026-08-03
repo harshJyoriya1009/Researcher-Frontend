@@ -1,0 +1,273 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "highlight.js/styles/atom-one-dark.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --radius: 0.75rem;
+
+  /* Light theme — "reading room" */
+  --background: #FAFAF8;
+  --foreground: #14181D;
+  --card: #FFFFFF;
+  --card-foreground: #14181D;
+  --popover: #FFFFFF;
+  --popover-foreground: #14181D;
+  --primary: #C8770A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EEF0F3;
+  --secondary-foreground: #14181D;
+  --muted: #F0F1EE;
+  --muted-foreground: #6B7280;
+  --accent: #4B4FE0;
+  --accent-foreground: #FFFFFF;
+  --destructive: #D0453C;
+  --destructive-foreground: #FFFFFF;
+  --border: #E4E4E1;
+  --input: #E4E4E1;
+  --ring: #C8770A;
+  --success: #1F9D6E;
+
+  --sidebar: #F3F2EE;
+  --sidebar-foreground: #14181D;
+  --sidebar-border: #E4E4E1;
+  --sidebar-accent: #E9E7E0;
+
+  --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  --font-sans: "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+.dark {
+  /* Dark theme — "ink" */
+  --background: #0A0D11;
+  --foreground: #E8ECEF;
+  --card: #11151A;
+  --card-foreground: #E8ECEF;
+  --popover: #11151A;
+  --popover-foreground: #E8ECEF;
+  --primary: #C8770A;
+  --primary-foreground: #0A0D11;
+  --secondary: #171C22;
+  --secondary-foreground: #E8ECEF;
+  --muted: #171C22;
+  --muted-foreground: #8B96A3;
+  --accent: #8489FF;
+  --accent-foreground: #0A0D11;
+  --destructive: #E5615A;
+  --destructive-foreground: #0A0D11;
+  --border: #1F252C;
+  --input: #1F252C;
+  --ring: #C8770A;
+  --success: #34C08A;
+
+  --sidebar: #0D1116;
+  --sidebar-foreground: #E8ECEF;
+  --sidebar-border: #1B2028;
+  --sidebar-accent: #171C22;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent: var(--sidebar-accent);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --animate-fade-in: fade-in 0.4s ease-out;
+  --animate-slide-up: slide-up 0.35s ease-out;
+  --animate-marquee: marquee var(--duration) linear infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+* {
+  border-color: var(--border);
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 70%),
+    radial-gradient(circle at center, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+@keyframes orbit-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-ccw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@keyframes core-pulse {
+  0%, 100% {
+    box-shadow: 0 0 24px 6px rgba(0, 255, 210, 0.25), 0 0 60px 16px rgba(0, 255, 210, 0.08);
+  }
+  50% {
+    box-shadow: 0 0 36px 12px rgba(0, 255, 210, 0.45), 0 0 80px 24px rgba(0, 255, 210, 0.14);
+  }
+}
+
+@keyframes float-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+/* Thin, quiet scrollbars */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Markdown content in chat */
+.prose-chat {
+  line-height: 1.7;
+}
+.prose-chat p {
+  margin: 0.6em 0;
+}
+.prose-chat ul, .prose-chat ol {
+  margin: 0.6em 0;
+  padding-left: 1.4em;
+}
+.prose-chat ul { list-style: disc; }
+.prose-chat ol { list-style: decimal; }
+.prose-chat h1, .prose-chat h2, .prose-chat h3 {
+  font-family: var(--font-display);
+  margin: 1em 0 0.4em;
+  font-weight: 600;
+}
+.prose-chat h1 { font-size: 1.4em; }
+.prose-chat h2 { font-size: 1.25em; }
+.prose-chat h3 { font-size: 1.1em; }
+.prose-chat code {
+  font-family: var(--font-mono);
+  background: var(--muted);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+.prose-chat pre {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.9em 1em;
+  overflow-x: auto;
+  margin: 0.8em 0;
+}
+.prose-chat pre code {
+  background: transparent;
+  padding: 0;
+  color: #e6edf3;
+}
+.prose-chat blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1em;
+  margin: 0.8em 0;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.prose-chat table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.8em 0;
+  font-size: 0.92em;
+}
+.prose-chat th, .prose-chat td {
+  border: 1px solid var(--border);
+  padding: 0.45em 0.7em;
+  text-align: left;
+}
+.prose-chat th {
+  background: var(--muted);
+}
+.prose-chat a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Keep brand text blue without changing fill/background utilities that use --primary */
+.text-primary {
+  color: #5968ee !important;
+}
+
+.hover\:text-primary:hover {
+  color: #818CF8 !important;
+}

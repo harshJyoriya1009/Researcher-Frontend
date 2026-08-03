@@ -1,0 +1,68 @@
+"use client";
+
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+  {
+    variants: {
+      variant: {
+        default: "bg-[#5968ee] text-white hover:bg-[#7280E0]",
+        destructive: "bg-destructive text-destructive-foreground hover:opacity-90",
+        outline:
+          "border border-border bg-transparent hover:bg-secondary text-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:opacity-80",
+        ghost: "hover:bg-secondary text-foreground",
+        link: "text-[#5968ee] underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2 [&_svg]:size-4",
+        sm: "h-8 rounded-md px-3 text-xs [&_svg]:size-3.5",
+        lg: "h-11 rounded-md px-6 text-base [&_svg]:size-5",
+        icon: "h-9 w-9 [&_svg]:size-4",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  loading?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, loading, disabled, children, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {loading && <Loader2 className="animate-spin" />}
+            {children}
+          </>
+        )}
+      </Comp>
+    );
+  }
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
