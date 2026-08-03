@@ -44,34 +44,22 @@ export function useDocuments() {
 export function useUploadDocument() {
   const queryClient = useQueryClient();
   const addDocument = useDocumentStore((s) => s.addDocument);
+  const removeDocument = useDocumentStore((s) => s.removeDocument);
   const updateDocument = useDocumentStore((s) => s.updateDocument);
 
   const mutation = useMutation({
-    mutationFn: async (file: File) => {
-      const tempId = `temp_${crypto.randomUUID()}`;
-      const placeholder: ResearchDocument = {
-        id: tempId,
-        name: file.name,
-        type: file.name.endsWith(".docx") ? "docx" : file.name.endsWith(".txt") ? "txt" : "pdf",
-        sizeBytes: file.size,
-        status: "uploading",
-        uploadedAt: new Date().toISOString(),
-        progress: 0,
-      };
-      addDocument(placeholder);
-
-      const result = await documentService.upload(file, (percent) => {
+    mutationFn: async ({ file, tempId }: { file: File; tempId: string }) => {
+      return documentService.upload(file, (percent) => {
         updateDocument(tempId, { progress: percent });
       });
-
-      updateDocument(tempId, result);
-      return result;
     },
-    onSuccess: () => {
+    onSuccess: (result, variables) => {
+      updateDocument(variables.tempId, result);
       queryClient.invalidateQueries({ queryKey: ["documents"] });
       toast.success("Document uploaded — indexing in the background.");
     },
-    onError: (error) => {
+    onError: (error, variables) => {
+      removeDocument(variables.tempId);
       const responseData = error instanceof AxiosError ? error.response?.data : undefined;
       const message =
         typeof responseData?.message === "string"
@@ -87,7 +75,22 @@ export function useUploadDocument() {
     },
   });
 
-  const upload = useCallback((file: File) => mutation.mutate(file), [mutation]);
+  const upload = useCallback(
+    (file: File) => {
+      const tempId = `temp_${crypto.randomUUID()}`;
+      addDocument({
+        id: tempId,
+        name: file.name,
+        type: file.name.endsWith(".docx") ? "docx" : file.name.endsWith(".txt") ? "txt" : "pdf",
+        sizeBytes: file.size,
+        status: "uploading",
+        uploadedAt: new Date().toISOString(),
+        progress: 0,
+      });
+      mutation.mutate({ file, tempId });
+    },
+    [addDocument, mutation]
+  );
   return { ...mutation, upload };
 }
 

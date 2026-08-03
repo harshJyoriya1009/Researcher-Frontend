@@ -2,10 +2,12 @@
 
 import { useCallback, useRef, useState } from "react";
 import { UploadCloud } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useUploadDocument } from "@/hooks/useDocuments";
 
 const ACCEPTED = [".pdf", ".docx", ".txt"];
+const MAX_UPLOAD_SIZE_MB = Number(process.env.NEXT_PUBLIC_MAX_UPLOAD_SIZE_MB ?? "25");
 
 export function DocumentUploadZone() {
   const [isDragging, setIsDragging] = useState(false);
@@ -17,9 +19,15 @@ export function DocumentUploadZone() {
       if (!files) return;
       Array.from(files).forEach((file) => {
         const ext = "." + file.name.split(".").pop()?.toLowerCase();
-        if (ACCEPTED.includes(ext)) {
-          upload(file);
+        if (!ACCEPTED.includes(ext)) {
+          toast.error("Only PDF, DOCX, and TXT files are allowed.");
+          return;
         }
+        if (file.size > MAX_UPLOAD_SIZE_MB * 1024 * 1024) {
+          toast.error(`File is too large. Maximum size is ${MAX_UPLOAD_SIZE_MB}MB.`);
+          return;
+        }
+        upload(file);
       });
     },
     [upload]
