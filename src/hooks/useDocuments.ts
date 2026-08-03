@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { documentService } from "@/services/documentService";
 import { useDocumentStore } from "@/store/useDocumentStore";
@@ -70,8 +71,12 @@ export function useUploadDocument() {
       queryClient.invalidateQueries({ queryKey: ["documents"] });
       toast.success("Document uploaded — indexing in the background.");
     },
-    onError: () => {
-      toast.error("Upload failed. Please try again.");
+    onError: (error) => {
+      const message =
+        error instanceof AxiosError && typeof error.response?.data?.message === "string"
+          ? error.response.data.message
+          : "Upload failed. Please try again.";
+      toast.error(message);
     },
   });
 
