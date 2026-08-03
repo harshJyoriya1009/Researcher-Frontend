@@ -72,10 +72,17 @@ export function useUploadDocument() {
       toast.success("Document uploaded — indexing in the background.");
     },
     onError: (error) => {
+      const responseData = error instanceof AxiosError ? error.response?.data : undefined;
       const message =
-        error instanceof AxiosError && typeof error.response?.data?.message === "string"
-          ? error.response.data.message
-          : "Upload failed. Please try again.";
+        typeof responseData?.message === "string"
+          ? responseData.message
+          : typeof responseData?.error === "string" && typeof responseData?.detail === "string"
+            ? responseData.detail
+            : typeof responseData?.detail === "string"
+              ? responseData.detail
+              : typeof responseData === "string"
+                ? responseData
+                : "Upload failed. Please try again.";
       toast.error(message);
     },
   });

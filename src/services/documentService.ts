@@ -18,10 +18,7 @@ export const documentService = {
     file: File,
     onProgress?: (percent: number) => void
   ): Promise<ResearchDocument> {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const { data } = await apiClient.post<ApiDocument>("/documents/upload", formData, {
+    const { data } = await apiClient.postForm<ApiDocument>("/documents/upload", { file }, {
       onUploadProgress: (e) => {
         if (onProgress && e.total) {
           onProgress(Math.round((e.loaded * 100) / e.total));
