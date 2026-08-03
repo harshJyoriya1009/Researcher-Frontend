@@ -59,6 +59,7 @@ export interface ResearchDocument {
   uploadedAt: string;
   pages?: number;
   progress?: number;
+  errorMessage?: string;
 }
 
 export interface DashboardStats {

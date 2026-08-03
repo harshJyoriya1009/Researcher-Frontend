@@ -71,6 +71,10 @@ export function DocumentCard({ document, onDelete }: DocumentCardProps) {
             <Badge variant={status.variant} className="text-[10px]">{status.label}</Badge>
           )}
         </div>
+
+        {document.errorMessage ? (
+          <p className="text-xs text-amber-600 dark:text-amber-400">{document.errorMessage}</p>
+        ) : null}
       </Card>
     </motion.div>
   );

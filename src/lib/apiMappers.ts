@@ -104,5 +104,6 @@ export function mapDocument(d: ApiDocument): ResearchDocument {
     status: d.status,
     uploadedAt: d.created_at,
     pages: d.page_count ?? undefined,
+    errorMessage: d.error_message ?? undefined,
   };
 }
